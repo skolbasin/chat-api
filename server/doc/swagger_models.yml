@@ -1,0 +1,114 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Models
+  description: API documentation for models
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      profile:
+        $ref: "#/definitions/Profile"
+
+  Profile:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      user_id:
+        type: "integer"
+      nickname:
+        type: "string"
+      age:
+        type: "integer"
+      photo:
+        type: "string"
+      country:
+        type: "string"
+      phone_number:
+        type: "string"
+  Tweet:
+    type: object
+    properties:
+      id:
+        type: integer
+      tweet_data:
+        type: string
+      date:
+        type: string
+      tweet_media_ids:
+        type: array
+        items:
+          type: integer
+      user_id:
+        type: integer
+      user:
+        $ref: '#/components/schemas/User'
+      likes:
+        type: array
+        items:
+          $ref: '#/components/schemas/TweetLike'
+    required:
+      - id
+      - tweet_data
+      - date
+      - user_id
+
+  Department:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+      - id
+      - name
+
+  Media:
+    type: object
+    properties:
+      id:
+        type: integer
+      media_data:
+        type: string
+      file_size:
+        type: integer
+      url:
+        type: string
+    required:
+      - id
+      - media_data
+      - file_size
+      - url
+
+  TweetLike:
+    type: object
+    properties:
+      tweet_id:
+        type: integer
+      author_id:
+        type: integer
+      user:
+        $ref: '#/components/schemas/User'
+    required:
+      - tweet_id
+      - author_id
+
+  Follow:
+    type: object
+    properties:
+      follower_id:
+        type: integer
+      followed_id:
+        type: integer
+    required:
+      - follower_id
+      - followed_id

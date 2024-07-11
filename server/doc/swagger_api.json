@@ -1,0 +1,298 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Documentation for API endpoints in project",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/tweets": {
+      "post": {
+        "summary": "Add a new tweet",
+        "tags": [
+          "Tweets API"
+        ],
+        "parameters": [
+          {
+            "name": "tweet_data",
+            "in": "body",
+            "description": "Text content of the tweet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tweet_media_ids",
+            "in": "body",
+            "description": "List of media IDs attached to the tweet",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user posting the tweet",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tweet added successfully"
+          },
+          "400": {
+            "description": "Bad request - missing tweet data"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all tweets",
+        "tags": [
+          "Tweets API"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tweets retrieved successfully"
+          }
+        }
+      }
+    },
+    "/api/tweets/follow": {
+      "get": {
+        "summary": "Get followed tweets by ID",
+        "tags": [
+          "Tweets API"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tweets retrieved successfully"
+          }
+        }
+      }
+    },
+    "/api/media": {
+      "post": {
+        "summary": "Add new media file",
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "description": "Media file to be uploaded",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Media file added successfully"
+          },
+          "400": {
+            "description": "Bad request - missing file"
+          }
+        }
+      }
+    },
+    "/api/tweets/{tweet_id}": {
+      "delete": {
+        "summary": "Delete a tweet",
+        "tags": [
+          "Tweets API"
+        ],
+        "parameters": [
+          {
+            "name": "tweet_id",
+            "in": "path",
+            "description": "ID of the tweet to delete",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user deleting the tweet",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tweet deleted successfully"
+          },
+          "404": {
+            "description": "Tweet not found"
+          },
+          "403": {
+            "description": "Forbidden - cannot delete another user's tweet"
+          }
+        }
+      }
+    },
+    "/api/tweets/{id}/likes": {
+      "post": {
+        "summary": "Like a tweet",
+        "tags": [
+          "Tweets API"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the tweet to like",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user liking the tweet",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tweet liked successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Unlike a tweet",
+        "tags": [
+          "Tweets API"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the tweet to unlike",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user unliking the tweet",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tweet unliked successfully"
+          }
+        }
+      }
+    },
+    "/api/users/{id}/follow": {
+      "post": {
+        "summary": "Follow a user",
+        "tags": [
+          "Users API"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to follow",
+            "required": true,
+            "type": "integer"
+          },          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user performing the follow action",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User followed successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Unfollow a user",
+        "tags": [
+          "Users API"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to unfollow",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "ID of the user performing the unfollow action",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User unfollowed successfully"
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "summary": "Get current user's profile",
+        "tags": [
+          "Users API"
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully"
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "summary": "Get user profile by ID",
+        "tags": [
+          "Users API"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to retrieve profile for",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully"
+          }
+        }
+      }
+    }
+  }
+}

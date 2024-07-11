@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  unit_test_db:
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1122
+      POSTGRES_DB: db
+      PGDATA: /var/lib/postgresql/test_data
+    volumes:
+      - pgdata:/var/lib/postgresql/test_data
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

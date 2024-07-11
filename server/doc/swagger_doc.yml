@@ -1,0 +1,563 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Models and Endpoints
+  description: Full documentation for micro-blog
+
+paths:
+  /api/tweets:
+    get:
+      summary: Получить все твиты
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Успешно получены все твиты
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  tweets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        attachments:
+                          type: array
+                          items:
+                            type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                        likes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              user_id:
+                                type: integer
+                              name:
+                                type: string
+        '400':
+          description: Ошибка при получении твитов
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  error_type:
+                    type: string
+                    description: Тип ошибки
+                  error_message:
+                    type: string
+    post:
+      summary: Добавить новый твит
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tweet_data:
+                  type: string
+                tweet_media_ids:
+                  type: array
+                  items:
+                    type: string
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Успешно добавлен новый твит
+        '400':
+          description: Ошибка в запросе
+  /api/media:
+    post:
+      summary: Добавить новый медиа-файл
+      tags:
+        - Media
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Успешно добавлен новый медиа-файл
+        '400':
+          description: Ошибка в запросе
+  /api/tweets/{tweet_id}:
+    delete:
+      summary: Удалить твит по его ID
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - in: path
+          name: tweet_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Твит успешно удален
+        '403':
+          description: Невозможно удалить чужой твит
+        '404':
+          description: Твит не найден
+  api/likes:
+    post:
+      summary: Лайкнуть твит
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Операция выполнена успешно
+        '400':
+          description: Пользователь уже поставил лайк под данным твитом
+  /api/tweets/{id}/likes:
+    delete:
+      summary: Убрать лайк с твита
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Лайк успешно удален
+        '400':
+          description: Данный пользователь не лайкал данный твит
+  /api/users/{id}/follow:
+    post:
+      summary: Подписаться на пользователя
+      tags:
+        - Users
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Подписка оформлена успешно
+        '400':
+    delete:
+      summary: Отписаться от пользователя
+      tags:
+        - Users
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Отписка произведена успешно
+        '400':
+          description: Пользователь не был подписан на указанного пользователя
+  /api/tweets/follow:
+    get:
+      summary: Получить твиты пользователей, на которых подписан текущий пользователь
+      tags:
+        - Tweets
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Успешно получены твиты пользователей, на которых подписан текущий пользователь
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  tweets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        attachments:
+                          type: array
+                          items:
+                            type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                        likes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              user_id:
+                                type: integer
+                              name:
+                                type: string
+        '400':
+          description: Ошибка при получении твитов пользователей, на которых пользователь подписан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  error_type:
+                    type: string
+                    description: Тип ошибки
+                  error_message:
+                    type: string
+  /api/users/me:
+    get:
+      summary: Получить профиль текущего пользователя
+      tags:
+        - Users
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Успешно получен профиль текущего пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    description: Результат операции
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      followers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                      following:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                      nickname:
+                        type: string
+                      age:
+                        type: integer
+                      country:
+                        type: string
+                      phone_number:
+                        type: string
+        '400':
+          description: Ошибка при получении профиля текущего пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  error_type:
+                    type: string
+                    description: Тип ошибки
+                  error_message:
+                    type: string
+  /api/users/{id}:
+    get:
+      summary: Получить профиль пользователя по его ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID пользователя
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Успешно получен профиль пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    description: Результат операции
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      followers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                      following:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                      nickname:
+                        type: string
+                      age:
+                        type: integer
+                      country:
+                        type: string
+                      phone_number:
+                        type: string
+        '400':
+          description: Ошибка при получении профиля пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Результат операции
+                  error_type:
+                    type: string
+                    description: Тип ошибки
+                  error_message:
+                    type: string
+
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      profile:
+        $ref: "#/definitions/Profile"
+
+  Profile:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      user_id:
+        type: "integer"
+      nickname:
+        type: "string"
+      age:
+        type: "integer"
+      photo:
+        type: "string"
+      country:
+        type: "string"
+      phone_number:
+        type: "string"
+  Tweet:
+    type: object
+    properties:
+      id:
+        type: integer
+      tweet_data:
+        type: string
+      date:
+        type: string
+      tweet_media_ids:
+        type: array
+        items:
+          type: integer
+      user_id:
+        type: integer
+      user:
+        $ref: '#/components/schemas/User'
+      likes:
+        type: array
+        items:
+          $ref: '#/components/schemas/TweetLike'
+    required:
+      - id
+      - tweet_data
+      - date
+      - user_id
+
+  Department:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+      - id
+      - name
+
+  Media:
+    type: object
+    properties:
+      id:
+        type: integer
+      media_data:
+        type: string
+      file_size:
+        type: integer
+      url:
+        type: string
+    required:
+      - id
+      - media_data
+      - file_size
+      - url
+
+  TweetLike:
+    type: object
+    properties:
+      tweet_id:
+        type: integer
+      author_id:
+        type: integer
+      user:
+        $ref: '#/components/schemas/User'
+    required:
+      - tweet_id
+      - author_id
+
+  Follow:
+    type: object
+    properties:
+      follower_id:
+        type: integer
+      followed_id:
+        type: integer
+    required:
+      - follower_id
+      - followed_id

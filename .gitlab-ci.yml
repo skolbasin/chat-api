@@ -1,0 +1,20 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+image: python:3.10
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - black server
+    - black run.py
+    - isort --profile black server
+    - isort --profile black run.py
+    - mypy server
+    - mypy run.py
